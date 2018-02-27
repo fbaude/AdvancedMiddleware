@@ -1,11 +1,5 @@
 <!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html><head>
-
-
-
-
-
-
    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
    <meta name="GENERATOR" content="Mozilla/4.76 [en] (X11; U; Linux 2.2.18 i686) [Netscape]">
    <meta name="Keywords" content="Cours WS">
@@ -3547,7 +3541,7 @@ style.firebugResetStyles {
 <b><i><font face="Arial,Helvetica"><font color="#440099">
 
 Option Réseaux avancés et Middleware : approche client/serveur par objets distribués
- 
+
 </font></font></i></b></h3></center>
 
 <center><b><i><font face="Arial,Helvetica"><font color="#ff99ff">Cours Polytech'Nice, SI4, 2010-2011-2012-2013, 2014, 2015, 2016, 2018  </font></font></i></b></center>
@@ -3562,145 +3556,144 @@ Option Réseaux avancés et Middleware : approche client/serveur par objets dist
 <li>Approfondissement Java RMI </li>
 </ul>
 <p></p><hr width="100%">
-
 <h3 style="margin: 0px 0px 14px; font: 16px Times;"><b>1. Serialization (rappels?)</b></h3>
 <p class="p3">Java RMI utilise intensivement la sérialisation. Un petit rappel s'impose !</p>
 <ol class="ol1">
   <li style="margin: 0px; font: 12px Times;">Reprenez la classe Résultat
  (qui est serializable) faite au TP1. Transformez un de ses attributs en
  transient (ce qui aura pour effet que la valeur de cet attribut ne sera
- pas copiée). Pour s'en convaincre, et après avoir recopié le nouveau 
-.class sur le site du client si besoin, relancer l'appli RMI et 
-constatez que le client n'aura pour cet attribut que la valeur par 
-défaut correspondant au type de l'attribut (la valeur n'a donc pas été 
+ pas copiée). Pour s'en convaincre, et après avoir recopié le nouveau
+.class sur le site du client si besoin, relancer l'appli RMI et
+constatez que le client n'aura pour cet attribut que la valeur par
+défaut correspondant au type de l'attribut (la valeur n'a donc pas été
 sérialisée).  </li>
-  <li style="margin: 0px; font: 12px Times;">Créez une sous classe de 
-Resultat. Celle ci sera sérializable par héritage. Rajoutez quelques 
-attributs (dont des attributs private) et redéfinissez toString() (qui devra faire appel aussi à 
-super.toString()). Faites en sorte que l'implémentation (et non 
-l'interface Remote) de l'objet serveur renvoie en résultat un objet qui 
+  <li style="margin: 0px; font: 12px Times;">Créez une sous classe de
+Resultat. Celle ci sera sérializable par héritage. Rajoutez quelques
+attributs (dont des attributs private) et redéfinissez toString() (qui devra faire appel aussi à
+super.toString()). Faites en sorte que l'implémentation (et non
+l'interface Remote) de l'objet serveur renvoie en résultat un objet qui
 soit une instance de la sous classe de Resultat. Dans le constructeur de
  la sous classe, donnez une autre valeur à un des attributs hérités.</li>
   <li style="margin: 0px; font: 12px Times;">Pour le moment, recopiez le
-  .class de Resultat et de cette sous-classe sur le site du client si  
+  .class de Resultat et de cette sous-classe sur le site du client si
 besoin,  et relancer l'appli RMI (sans oublier le rmiregistry). Vérifiez
-  que les valeurs recues sont celles attendues, cad, celles que vous 
+  que les valeurs recues sont celles attendues, cad, celles que vous
 avez envoyées  depuis le serveur.</li>
 <li style="margin: 0px; font: 12px Times;">Recommencez après avoir rendu
- Resultat non serializable. Il n'est pas certain que les valeurs recues 
+ Resultat non serializable. Il n'est pas certain que les valeurs recues
 soient toutes celles que vous aviez pensé avoir envoyé !(en particulier,
- celles données par la sous 
-classe aux attributs hérités). Tentez de donner une explication; Plus 
-précisément, si vous avez défini des constructeurs, sont-ils appelés 
+ celles données par la sous
+classe aux attributs hérités). Tentez de donner une explication; Plus
+précisément, si vous avez défini des constructeurs, sont-ils appelés
 lors de la désérialisation ?
 <!--  <li style="margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times"> A quoi cela sert il d'avoir un champ d&eacute;fini ainsi <i> (optionnellement private) static final long serialVersionUID = xx;</i>? </li> -->
 
 </li></ol>
 <h3 style="margin: 0px 0px 14px; font: 16px Times;"><b>2. Le téléchargement de classes</b></h3>
-<p class="p3">Pour éviter de devoir recopier <b>certains</b> des .class 
- manuellement, la machine serveur utilisera un serveur de classes 
-accessibles en HTTP pour transférer automatiquement les  classes qu'on 
-lui demande. La mise en place est l'objet de cet exercice.  A réaliser, 
-pour bien comprendre,  depuis des fenêtres Terminal différentes. 
+<p class="p3">Pour éviter de devoir recopier <b>certains</b> des .class
+ manuellement, la machine serveur utilisera un serveur de classes
+accessibles en HTTP pour transférer automatiquement les  classes qu'on
+lui demande. La mise en place est l'objet de cet exercice.  A réaliser,
+pour bien comprendre,  depuis des fenêtres Terminal différentes.
 </p><p><b>Selon que vous soyez en Java6 ou 7, les options à passer aux différentes JVM vont différer</b> <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/rmi/enhancements-7.html"> voir ici </a>.
- 
-Plus précisément, en Java7, les JVMs qui doivent télécharger 
-dynamiquement du code auprès du serveur de classes vont devoir utiliser 
+
+Plus précisément, en Java7, les JVMs qui doivent télécharger
+dynamiquement du code auprès du serveur de classes vont devoir utiliser
 une option de JVM ainsi: <i>-Djava.rmi.server.useCodebaseOnly=false</i>.
  Cela signifie qu'en plus de la base de code issue du classpath (système
- de fichiers local) ou d'autres URLs explicitement indiquées (via la 
-propriété java.rmi.server.codebase), les URLs reçues dans les objets 
-sérialisés transmis par RMI peuvent être contactées pour télécharger du 
+ de fichiers local) ou d'autres URLs explicitement indiquées (via la
+propriété java.rmi.server.codebase), les URLs reçues dans les objets
+sérialisés transmis par RMI peuvent être contactées pour télécharger du
 code. Le chargement de code ne se fait donc plus uniquement dans les bases de code habituellement énumérées grâce au CLASSPATH.
 </p><p>
-Le but est de vous montrer jusqu'à quel  point les 
-différentes parties de l'application réparties (y compris le 
+Le but est de vous montrer jusqu'à quel  point les
+différentes parties de l'application réparties (y compris le
 rmiregistry) peuvent  récupérer les classes utiles par <i>téléchargement</i>, sans les avoir dans  le(s) répertoire(s) indiqué(s) dans leur CLASSPATH</p>
 <ol class="ol1">
   <li style="margin: 0px; font: 12px Times;">Récupérez <a href="http://www-sop.inria.fr/members/Francoise.Baude/AppRep/classserver.zip">ici</a>
  un serveur http. Il doit prendre au lancement 2 paramètres: un numéro de port (il
- sera lancé sur la machine serveur mais pourrait en théorie tourner sur 
+ sera lancé sur la machine serveur mais pourrait en théorie tourner sur
 n'importe quelle machine), et un nom de répertoire dans lequel
- il piochera les .class pour les envoyer (ou des .jar), suite aux 
-futures demandes de 
-chargement (de la part du rmiregistry, comme de la part du client comme nous allons le tester dans cet exercice). 
+ il piochera les .class pour les envoyer (ou des .jar), suite aux
+futures demandes de
+chargement (de la part du rmiregistry, comme de la part du client comme nous allons le tester dans cet exercice).
 Compilez-le. </li>
-   <li style="margin: 0px; font: 12px Times;">Préparez un déploiement 
-minimaliste pour le client, qui va  donc devoir faire du téléchargement 
-des classes qui lui manqueraient, automatiquement. Quelles sont ces 
-classes minimum (sachant que le client fait d'abord un lookup pour 
+   <li style="margin: 0px; font: 12px Times;">Préparez un déploiement
+minimaliste pour le client, qui va  donc devoir faire du téléchargement
+des classes qui lui manqueraient, automatiquement. Quelles sont ces
+classes minimum (sachant que le client fait d'abord un lookup pour
 récupérer un stub qu'il doit désérialiser, puis, fait un cast du stub pour pouvoir l'utiliser) ?
- En vue de ce chargement, le client doit s'assurer 
-qu'il y a un <b>RMISecurityManager</b> (sinon, il doit en instancier un). Il 
-doit donc aussi y avoir un fichier de policy Java, dont le contenu le plus  
-basique (bien que trop permissif, voir TP3 pour plus de détails) est le 
+ En vue de ce chargement, le client doit s'assurer
+qu'il y a un <b>RMISecurityManager</b> (sinon, il doit en instancier un). Il
+doit donc aussi y avoir un fichier de policy Java, dont le contenu le plus
+basique (bien que trop permissif, voir TP3 pour plus de détails) est le
 suivant: <b><i style="color:red;">grant  { permission java.security.AllPermission; } ;  </i></b>. Créez ce fichier. Pour lancer le client, il faudra définir une property Java (<i>-Djava.security.policy="emplacement du fichier de policy"</i>). Ne pas lancer le client pour le moment...</li>
    <li style="margin: 0px; font: 12px Times;">Pour permettre le téléchargement, tout se joue du coté du serveur: celui-ci utilisera la property Java ad hoc ainsi <i> -Djava.rmi.server.codebase="URL du serveur web:port choisi"</i>. Très important: <b>terminer l'URL par un /</b></li>
-   <li style="margin: 0px; font: 12px Times;">Vous conviendrez que les 
-classes dont on pourra demander le téléchargement ne sont qu'un 
-sous-ensemble de celles dont a besoin l'objet serveur. Pour bien 
-comprendre, rangez (quitte à en recopier) vos classes coté machine serveur en deux 
-sous-répertoires : celles utiles pour lancer l'objet serveur, et celles 
-utiles seulement en téléchargement. Ce second répertoire est donc celui 
+   <li style="margin: 0px; font: 12px Times;">Vous conviendrez que les
+classes dont on pourra demander le téléchargement ne sont qu'un
+sous-ensemble de celles dont a besoin l'objet serveur. Pour bien
+comprendre, rangez (quitte à en recopier) vos classes coté machine serveur en deux
+sous-répertoires : celles utiles pour lancer l'objet serveur, et celles
+utiles seulement en téléchargement. Ce second répertoire est donc celui
 que le serveur HTTP indique comme second paramètre.</li>
-  <li style="margin: 0px; font: 12px Times;">Testez l'ensemble, mais attention, 
-  <b>pour forcer que le rmiregistry  vienne demander à télécharger les 
-classes (c'est quand même l'objet de l'exercice!), il ne doit surtout 
-pas avoir la variable 
+  <li style="margin: 0px; font: 12px Times;">Testez l'ensemble, mais attention,
+  <b>pour forcer que le rmiregistry  vienne demander à télécharger les
+classes (c'est quand même l'objet de l'exercice!), il ne doit surtout
+pas avoir la variable
 CLASSPATH pointant vers un répertoire où elles existent</b> Donc pensez à
- annuler 
-la définition du CLASSPATH dans le terminal correspondant, ou 
-positionnez vous dans un répertoire où il n'y a aucune des classes 
+ annuler
+la définition du CLASSPATH dans le terminal correspondant, ou
+positionnez vous dans un répertoire où il n'y a aucune des classes
 nécessaires. Si vous êtes en Java7, pour passer la property <i>-Djava.rmi.server.useCodebaseOnly=false</i>
  à la JVM sous-jacente lancée par rmiregistry, il faut forcer ce passage
  en préfixant cette définition de propriété par -J.  Plus clairement, <b style="color:red;"> rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false </b></li>
-  <li style="margin: 0px; font: 12px Times;">Analysez finement quels 
+  <li style="margin: 0px; font: 12px Times;">Analysez finement quels
 .class sont demandés au serveur HTTP en distinguant celles demandées par
- le rmiregistry et celles demandées par le client, notamment si il 
-reçoit en réponse d'un appel distant un paramètre d'une sous-classe 
+ le rmiregistry et celles demandées par le client, notamment si il
+reçoit en réponse d'un appel distant un paramètre d'une sous-classe
 d'une classe déjà connue.</li>
 
 <p> <b>A retenir</b> Ce mécanisme de téléchargement permet de simplifier
- le déploiement de nouvelles implantations de classes (par le biais de 
-sous-classes) sur les sites des clients: au lieu de devoir transférer à 
-la main les nouvelles .class sur chaque site client, les clients 
-viendront automatiquement télécharger les implantations en un point 
-unique qui est le serveur web. Seule la base de code rendue accessible via le 
+ le déploiement de nouvelles implantations de classes (par le biais de
+sous-classes) sur les sites des clients: au lieu de devoir transférer à
+la main les nouvelles .class sur chaque site client, les clients
+viendront automatiquement télécharger les implantations en un point
+unique qui est le serveur web. Seule la base de code rendue accessible via le
 serveur web a besoin d'être mise à jour.
 </p></ol>
 <h3 style="margin: 0px 0px 14px; font: 16px Times;"><b>3. Paramètres de type Remote</b></h3>
-<p class="p3">Nous maitrisons bien le passage de paramètres par copie,  
-même pour des objets, lorsque l'on utilise RMI. Nous allons maintenant  
-expérimenter le passage par référence, possible via RMI, et qui va nous 
- rapprocher de la sémantique Java habituelle de passage (qui est par 
+<p class="p3">Nous maitrisons bien le passage de paramètres par copie,
+même pour des objets, lorsque l'on utilise RMI. Nous allons maintenant
+expérimenter le passage par référence, possible via RMI, et qui va nous
+ rapprocher de la sémantique Java habituelle de passage (qui est par
 référence) des objets en  paramètre. </p>
 <ol class="ol1">
   <li style="margin: 0px; font: 12px Times;">Definissez une interface Remote (appelons-la&nbsp; <i>Service)</i></li>
   <li style="margin: 0px; font: 12px Times;">Ce service est très simple:
- son rôle est de maintenir une variable de type int, et d'offrir 2 
-méthodes utilisables à distance: connaitre la valeur actuelle de cette 
-variable, et, mettre a jour la valeur de cette variable avec en 
+ son rôle est de maintenir une variable de type int, et d'offrir 2
+méthodes utilisables à distance: connaitre la valeur actuelle de cette
+variable, et, mettre a jour la valeur de cette variable avec en
 parametre un nombre qui est un facteur multiplicatif.</li>
   <li style="margin: 0px; font: 12px Times;">Rajoutez à la définition de notre objet distant qui implante <span style="font-style: italic;">Distante</span> (définie au TP1),
- une méthode supplémentaire que le client pourra appeler. Son rôle sera 
+ une méthode supplémentaire que le client pourra appeler. Son rôle sera
 de renvoyer au client une référence vers un tel objet de type <span style="font-style: italic;">Service</span><br>
 </li>
-  <li style="margin: 0px; font: 12px Times;">Modifiez en conséquence le 
-code de l'objet qui implante l'interface Distante. Faites en sorte que 
-l'objet implantant Service ne soit instancié qu'une seule fois lorsque 
+  <li style="margin: 0px; font: 12px Times;">Modifiez en conséquence le
+code de l'objet qui implante l'interface Distante. Faites en sorte que
+l'objet implantant Service ne soit instancié qu'une seule fois lorsque
 l'objet distant (=le serveur) démarre. L'implémentation de la méthode de
- la question 3 fera donc en sorte de renvoyer une référence vers cette 
-unique instance de Service, cad. sans en recréer une à chaque appel de 
+ la question 3 fera donc en sorte de renvoyer une référence vers cette
+unique instance de Service, cad. sans en recréer une à chaque appel de
 cette méthode</li>
-<li style="margin: 0px; font: 12px Times;">Modifiez à présent le client 
-afin que celui-ci utilise la nouvelle méthode qui lui renvoie une 
-référence vers un objet Service. Au passage, affichez sur l'écran la 
+<li style="margin: 0px; font: 12px Times;">Modifiez à présent le client
+afin que celui-ci utilise la nouvelle méthode qui lui renvoie une
+référence vers un objet Service. Au passage, affichez sur l'écran la
 valeur de cette référence, ce qui vous donnera précisément des informations sur ce
- service invoquable à distance. Ensuite, le client doit invoquer une ou 
-plusieurs fois de suite (en boucle avec une petite attente entre chaque 
+ service invoquable à distance. Ensuite, le client doit invoquer une ou
+plusieurs fois de suite (en boucle avec une petite attente entre chaque
 appel) la méthode qui modifie la valeur détenue par le service.</li>
-<li style="margin: 0px; font: 12px Times;">Testez votre application RMI  en priorité en local, et en 
-réparti  si vous avez le temps. Dans ce cas, prenez soin de mettre à disposition du 
+<li style="margin: 0px; font: 12px Times;">Testez votre application RMI  en priorité en local, et en
+réparti  si vous avez le temps. Dans ce cas, prenez soin de mettre à disposition du
 serveur http vos .class utiles au client plutôt que de les copier manuellement sur la machine du client.<br>
 Démarrez plusieurs clients depuis plusieurs consoles. <b> Que constatez-vous
  quant à la valeur récupérée après chaque appel de service sur chacun de
@@ -3712,26 +3705,26 @@ Démarrez plusieurs clients depuis plusieurs consoles. <b> Que constatez-vous
 </ol>
 <h3 style="margin: 0px 0px 14px; font: 16px Times;"><b>4. Multi threading et RMI<br>
 </b></h3>
-<p class="p3">L'exercice précédent nous montre qu'il y a effectivement 
-plusieurs threads clientes qui, à un même instant, pourraient vouloir 
+<p class="p3">L'exercice précédent nous montre qu'il y a effectivement
+plusieurs threads clientes qui, à un même instant, pourraient vouloir
 invoquer la même méthode côté serveur, et donc, en concurrence.<br>
 Ceci peut provoquer des <span style="font-style: italic;">race conditions</span>
-  ("conditions de vitesse", signifiant que selon la vitesse d'exécution 
-des différentes threads, le résultat obtenu ne sera pas forcément 
-toujours cohérent avec ce qui se serait passé si les threads s'étaient 
+  ("conditions de vitesse", signifiant que selon la vitesse d'exécution
+des différentes threads, le résultat obtenu ne sera pas forcément
+toujours cohérent avec ce qui se serait passé si les threads s'étaient
 toutes exécutées à la suite les unes des autres)<br>
 </p>
 <p class="p3">Le but de l'exercice est de mettre ceci en évidence.</p>
 
 <ol class="ol1">
-  <li style="margin: 0px; font: 12px Times;">Côté client, affichez le 
-nom de la thread en train d'exécuter l'appel d'une de vos méthodes 
-distantes, et respectivement côté serveur, affichez le nom de la thread 
+  <li style="margin: 0px; font: 12px Times;">Côté client, affichez le
+nom de la thread en train d'exécuter l'appel d'une de vos méthodes
+distantes, et respectivement côté serveur, affichez le nom de la thread
 en train d'effectuer l'exécution de cette méthode.</li>
-  
-<li style="margin: 0px; font: 12px Times;">&nbsp;Pour la méthode 
-distante rajoutée dans l'exercice&nbsp; 3 question 2 voici une 
-proposition d'implémentation (val est un attribut) 
+
+<li style="margin: 0px; font: 12px Times;">&nbsp;Pour la méthode
+distante rajoutée dans l'exercice&nbsp; 3 question 2 voici une
+proposition d'implémentation (val est un attribut)
 <br>public&nbsp;&nbsp; int&nbsp; setVal(int v, String cname) throws RemoteException {<br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;val=val*v;<br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;try {<br>
@@ -3739,13 +3732,13 @@ proposition d'implémentation (val est un attribut)
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;} catch (InterruptedException e) {<br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;e.printStackTrace();<br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;}<br>
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; 
-&nbsp;System.out.println("Thread:"+Thread.currentThread().getName()+" 
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;System.out.println("Thread:"+Thread.currentThread().getName()+"
 val renvoyée : " + val + "au Client "+cname);<br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;return val;<br>
 &nbsp;&nbsp;&nbsp; } &nbsp;&nbsp;&nbsp;&nbsp; <br>
-Si on lance plusieurs clients en parallèle, chacun dans une console 
-différente, pourquoi a-t-on une forte probabilité d'obtenir ce type 
+Si on lance plusieurs clients en parallèle, chacun dans une console
+différente, pourquoi a-t-on une forte probabilité d'obtenir ce type
 d'affichage côté serveur (voir ci-dessous):<br>
   <br>
 Thread:RMI TCP Connection(3)-127.0.0.1 val renvoyee :8 au Client toto<br>
@@ -3772,9 +3765,9 @@ Thread:RMI TCP Connection(3)-127.0.0.1 val renvoyee :1024au Client toto</li>
 
 <h3 style="margin: 0px 0px 14px; font: 16px Times;"><b>5. Le client est accessible à distance (il est "Remote")<br>
 </b></h3>
-<p class="p3">A présent, faire en sorte que l'objet distant puisse 
-également invoquer une méthode à distance sur un objet Client (par 
-exemple, pour lui faire parvenir une information que le client n'avait 
+<p class="p3">A présent, faire en sorte que l'objet distant puisse
+également invoquer une méthode à distance sur un objet Client (par
+exemple, pour lui faire parvenir une information que le client n'avait
 pas forcément demandée). Le client offre donc aussi une interface Remote
  que le serveur sera en mesure d'utiliser quand bon lui semble.&nbsp;  </p>
 <ol class="ol1">
@@ -3785,20 +3778,20 @@ public&nbsp;&nbsp; int&nbsp; setVal(int v, <span style="color:red;">String </spa
 on voudra avoir ceci<br>
 <br>
     public&nbsp;&nbsp; int&nbsp; setVal(int v, <span style="color:red;">Client </span>cname) throws RemoteException<br>
-où cname sera une référence distante sur l'objet Client qui fait cet 
+où cname sera une référence distante sur l'objet Client qui fait cet
     appel à setVal. Cette référence joue le rôle d'un <b>CallBack</b> (cad, permet à
- l'appelé de lui-même déclencher une méthode sur l'objet appelant). Il 
-est évidemment inutile d'enregistrer une référence du client dans un 
+ l'appelé de lui-même déclencher une méthode sur l'objet appelant). Il
+est évidemment inutile d'enregistrer une référence du client dans un
 quelconque rmiregistry ! Expliquez pourquoi.<br>
 <br>
-Le serveur pourra par exemple facturer un montant au client, 
+Le serveur pourra par exemple facturer un montant au client,
 proportionnel au traitement demandé par le client (par exemple, selon la
  valeur du paramètre v, la facture sera plus ou moins salée!). Le but du callback est alors de renvoyer la facture.<br>
 Le code de setVal pourrait donc devenir:<br>
 &nbsp;&nbsp; &nbsp;public&nbsp;&nbsp; synchronized int&nbsp; setVal(int v, Client cname) throws RemoteException {<br>
 &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;val=val*v;<br>
-&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 
-&nbsp;System.out.println("Thread:"+Thread.currentThread().getName()+" 
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;System.out.println("Thread:"+Thread.currentThread().getName()+"
 val renvoyée : " + val + "au Client "+cname);<br>
 &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Facture f= new Facture(v) // prix à payer pour cette opération<br>
 &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;try {<br>
@@ -3808,7 +3801,7 @@ val renvoyée : " + val + "au Client "+cname);<br>
 &nbsp;&nbsp; &nbsp;}<br>
 Implanter cette possibilité. Quelle précaution prendre pour implanter la
  méthode facturer ? Pensez au cas où le client pourrait être la cible de
- plusieurs facturations concurrentes, suite par exemple à plusieurs 
+ plusieurs facturations concurrentes, suite par exemple à plusieurs
 invocations de service sur plusieurs serveurs différents?&nbsp; Quelles questions faut-il se poser si l'on
 décide néanmoins de rendre factoriser "synchronized" (pensez aux deadlocks...) ?</li>
 </ol>
